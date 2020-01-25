@@ -1,0 +1,775 @@
+{
+ "cells": [
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "<img src=\"http://imgur.com/1ZcRyrc.png\" style=\"float: left; margin: 20px; height: 55px\">\n",
+    "\n",
+    "# Time Series and Datetime\n",
+    "\n",
+    "_Authors: Samuel Stack (DC)_\n",
+    "\n",
+    "---\n",
+    "\n",
+    "### Learning Objectives\n",
+    "- Use the datetime library to represent dates as objects.\n",
+    "- Learn how to calculate time differences with `timedelta()`.\n",
+    "- Use datetime objects in Pandas on the UFO reports data set."
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "### Lesson Guide\n",
+    "- [The Datetime Library](#the-datetime-library)\n",
+    "- [Datetime Objects](#datetime-object)\n",
+    "- [`timedelta()`](#timedelta)\n",
+    "- [Load the UFO Reports Data](#load-the-ufo-reports-data)\n",
+    "- [Pandas' `pd.datetime`](#pandas-pddatetime)\n",
+    "\t- [The `.dt` Attribute](#the-dt-attribute)\n",
+    "- [Timestamps](#timestamps)\n",
+    "- [Additional Resources](#additional-resources)\n"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "<a id=\"the-datetime-library\"></a>\n",
+    "## The Datetime Library\n",
+    "---\n",
+    "\n",
+    "Python's `datetime` library is great for dealing with time-related data, and Pandas has incorporated this library into its own datetime series and objects.\n",
+    "\n",
+    "In this lesson, we'll review these data types and learn a little more about each of them:\n",
+    "\n",
+    "- Datetime objects.\n",
+    "- Datetime series.\n",
+    "- Timestamps.\n",
+    "- `timedelta()`.\n"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "<a id=\"datetime-object\"></a>\n",
+    "## Datetime Objects\n",
+    "---\n",
+    "\n",
+    "Below, we load in the datetime library, which we can use to create a datetime object by entering in the different components of the date as arguments."
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 1,
+   "metadata": {
+    "collapsed": true
+   },
+   "outputs": [],
+   "source": [
+    "# The datetime library is something you should already have from Anaconda.\n",
+    "from datetime import datetime\n",
+    "# And you're probably already familiar with it!\n",
+    "\n",
+    "# Let's just set a random datetime — not the end of the world or anything.\n",
+    "lesson_date = datetime(2012, 12, 21, 12, 21, 12, 844089)\n"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "The components of the date are accessible via the object's attributes."
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 2,
+   "metadata": {},
+   "outputs": [
+    {
+     "name": "stdout",
+     "output_type": "stream",
+     "text": [
+      "Micro-Second 844089\n",
+      "Second 12\n",
+      "Minute 21\n",
+      "Hour 12\n",
+      "Day 21\n",
+      "Month 12\n",
+      "Year 2012\n"
+     ]
+    }
+   ],
+   "source": [
+    "print \"Micro-Second\", lesson_date.microsecond\n",
+    "print \"Second\", lesson_date.second\n",
+    "print \"Minute\", lesson_date.minute\n",
+    "print \"Hour\", lesson_date.hour\n",
+    "print \"Day\", lesson_date.day\n",
+    "print \"Month\",lesson_date.month\n",
+    "print \"Year\", lesson_date.year\n"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "<a id=\"timedelta\"></a>\n",
+    "## `timedelta()`\n",
+    "---\n",
+    "\n",
+    "Suppose we want to add time to a date or subtract time from it. Maybe we are using time as an index and want to get everything that happened a week before a specific observation.\n",
+    "\n",
+    "We can use a `timedelta` object to shift a datetime object. Here's an example:\n"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 3,
+   "metadata": {},
+   "outputs": [
+    {
+     "name": "stdout",
+     "output_type": "stream",
+     "text": [
+      "offset days 1\n",
+      "offset seconds 20\n",
+      "offset microseconds 0\n"
+     ]
+    }
+   ],
+   "source": [
+    "# Import timedelta() from the datetime library.\n",
+    "from datetime import timedelta\n",
+    "\n",
+    "# Timedeltas represent time as an amount rather than as a fixed position.\n",
+    "offset = timedelta(days=1, seconds=20)\n",
+    "\n",
+    "# The timedelta() has attributes that allow us to extract values from it.\n",
+    "print 'offset days', offset.days\n",
+    "print 'offset seconds', offset.seconds\n",
+    "print 'offset microseconds', offset.microseconds"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "Datetime's `.now()` function will give you the datetime object of this very moment."
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 4,
+   "metadata": {},
+   "outputs": [
+    {
+     "name": "stdout",
+     "output_type": "stream",
+     "text": [
+      "Like Right Now:  2017-04-03 15:20:55.971839\n"
+     ]
+    }
+   ],
+   "source": [
+    "now = datetime.now()\n",
+    "print \"Like Right Now: \", now"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "The current time is particularly useful when using `timedelta()`."
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 5,
+   "metadata": {},
+   "outputs": [
+    {
+     "name": "stdout",
+     "output_type": "stream",
+     "text": [
+      "Future:  2017-04-04 15:21:15.971839\n",
+      "Past:  2017-04-02 15:20:35.971839\n"
+     ]
+    }
+   ],
+   "source": [
+    "print \"Future: \", now + offset\n",
+    "print \"Past: \", now - offset"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "> _Note: The largest value a `timedelta()` can hold is `days`. For instance, you can't say you want your offset to be two years, 44 days, and 12 hours; you have to convert those years to days._\n",
+    "\n",
+    "You can read more in the `timedelta()` category [here](https://docs.python.org/2/library/datetime.html).\n"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "<a id=\"load-the-ufo-reports-data\"></a>\n",
+    "## Load the UFO Reports Data\n",
+    "---\n",
+    "\n",
+    "We can practice using datetime functions and objects with the UFO reports data."
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 6,
+   "metadata": {
+    "collapsed": true
+   },
+   "outputs": [],
+   "source": [
+    "# Get a data set from the internet.\n",
+    "import pandas as pd\n",
+    "ufo = pd.read_csv('http://bit.ly/uforeports')"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 7,
+   "metadata": {},
+   "outputs": [
+    {
+     "data": {
+      "text/html": [
+       "<div>\n",
+       "<table border=\"1\" class=\"dataframe\">\n",
+       "  <thead>\n",
+       "    <tr style=\"text-align: right;\">\n",
+       "      <th></th>\n",
+       "      <th>City</th>\n",
+       "      <th>Colors Reported</th>\n",
+       "      <th>Shape Reported</th>\n",
+       "      <th>State</th>\n",
+       "      <th>Time</th>\n",
+       "    </tr>\n",
+       "  </thead>\n",
+       "  <tbody>\n",
+       "    <tr>\n",
+       "      <th>0</th>\n",
+       "      <td>Ithaca</td>\n",
+       "      <td>NaN</td>\n",
+       "      <td>TRIANGLE</td>\n",
+       "      <td>NY</td>\n",
+       "      <td>6/1/1930 22:00</td>\n",
+       "    </tr>\n",
+       "    <tr>\n",
+       "      <th>1</th>\n",
+       "      <td>Willingboro</td>\n",
+       "      <td>NaN</td>\n",
+       "      <td>OTHER</td>\n",
+       "      <td>NJ</td>\n",
+       "      <td>6/30/1930 20:00</td>\n",
+       "    </tr>\n",
+       "    <tr>\n",
+       "      <th>2</th>\n",
+       "      <td>Holyoke</td>\n",
+       "      <td>NaN</td>\n",
+       "      <td>OVAL</td>\n",
+       "      <td>CO</td>\n",
+       "      <td>2/15/1931 14:00</td>\n",
+       "    </tr>\n",
+       "    <tr>\n",
+       "      <th>3</th>\n",
+       "      <td>Abilene</td>\n",
+       "      <td>NaN</td>\n",
+       "      <td>DISK</td>\n",
+       "      <td>KS</td>\n",
+       "      <td>6/1/1931 13:00</td>\n",
+       "    </tr>\n",
+       "    <tr>\n",
+       "      <th>4</th>\n",
+       "      <td>New York Worlds Fair</td>\n",
+       "      <td>NaN</td>\n",
+       "      <td>LIGHT</td>\n",
+       "      <td>NY</td>\n",
+       "      <td>4/18/1933 19:00</td>\n",
+       "    </tr>\n",
+       "  </tbody>\n",
+       "</table>\n",
+       "</div>"
+      ],
+      "text/plain": [
+       "                   City Colors Reported Shape Reported State             Time\n",
+       "0                Ithaca             NaN       TRIANGLE    NY   6/1/1930 22:00\n",
+       "1           Willingboro             NaN          OTHER    NJ  6/30/1930 20:00\n",
+       "2               Holyoke             NaN           OVAL    CO  2/15/1931 14:00\n",
+       "3               Abilene             NaN           DISK    KS   6/1/1931 13:00\n",
+       "4  New York Worlds Fair             NaN          LIGHT    NY  4/18/1933 19:00"
+      ]
+     },
+     "execution_count": 7,
+     "metadata": {},
+     "output_type": "execute_result"
+    }
+   ],
+   "source": [
+    "ufo.head()"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "The `Time` column starts off as an object."
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 8,
+   "metadata": {},
+   "outputs": [
+    {
+     "data": {
+      "text/plain": [
+       "City               object\n",
+       "Colors Reported    object\n",
+       "Shape Reported     object\n",
+       "State              object\n",
+       "Time               object\n",
+       "dtype: object"
+      ]
+     },
+     "execution_count": 8,
+     "metadata": {},
+     "output_type": "execute_result"
+    }
+   ],
+   "source": [
+    "# We can see that the Time column is just an object.\n",
+    "ufo.dtypes"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": []
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 9,
+   "metadata": {},
+   "outputs": [
+    {
+     "data": {
+      "text/plain": [
+       "\"ufo['Time'] = pd.to_datetime(ufo.Time, format='%Y%m%d', errors='coerce')\""
+      ]
+     },
+     "execution_count": 9,
+     "metadata": {},
+     "output_type": "execute_result"
+    }
+   ],
+   "source": [
+    "# Overwrite the original Time column with one that has been converted to a datetime series.\n",
+    "ufo['Time'] = pd.to_datetime(ufo.Time)\n",
+    "\n",
+    "# Letting Pandas guess how to do this can take time; we can use a few arguments to help.\n",
+    "'''ufo['Time'] = pd.to_datetime(ufo.Time, format='%Y%m%d', errors='coerce')'''\n",
+    "# \"Format\" tells Pandas which format to use to interpret the date.\n",
+    "# \"Errors\" allows you to deal with errors automatically when converting."
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 10,
+   "metadata": {},
+   "outputs": [
+    {
+     "data": {
+      "text/html": [
+       "<div>\n",
+       "<table border=\"1\" class=\"dataframe\">\n",
+       "  <thead>\n",
+       "    <tr style=\"text-align: right;\">\n",
+       "      <th></th>\n",
+       "      <th>City</th>\n",
+       "      <th>Colors Reported</th>\n",
+       "      <th>Shape Reported</th>\n",
+       "      <th>State</th>\n",
+       "      <th>Time</th>\n",
+       "    </tr>\n",
+       "  </thead>\n",
+       "  <tbody>\n",
+       "    <tr>\n",
+       "      <th>0</th>\n",
+       "      <td>Ithaca</td>\n",
+       "      <td>NaN</td>\n",
+       "      <td>TRIANGLE</td>\n",
+       "      <td>NY</td>\n",
+       "      <td>1930-06-01 22:00:00</td>\n",
+       "    </tr>\n",
+       "    <tr>\n",
+       "      <th>1</th>\n",
+       "      <td>Willingboro</td>\n",
+       "      <td>NaN</td>\n",
+       "      <td>OTHER</td>\n",
+       "      <td>NJ</td>\n",
+       "      <td>1930-06-30 20:00:00</td>\n",
+       "    </tr>\n",
+       "    <tr>\n",
+       "      <th>2</th>\n",
+       "      <td>Holyoke</td>\n",
+       "      <td>NaN</td>\n",
+       "      <td>OVAL</td>\n",
+       "      <td>CO</td>\n",
+       "      <td>1931-02-15 14:00:00</td>\n",
+       "    </tr>\n",
+       "    <tr>\n",
+       "      <th>3</th>\n",
+       "      <td>Abilene</td>\n",
+       "      <td>NaN</td>\n",
+       "      <td>DISK</td>\n",
+       "      <td>KS</td>\n",
+       "      <td>1931-06-01 13:00:00</td>\n",
+       "    </tr>\n",
+       "    <tr>\n",
+       "      <th>4</th>\n",
+       "      <td>New York Worlds Fair</td>\n",
+       "      <td>NaN</td>\n",
+       "      <td>LIGHT</td>\n",
+       "      <td>NY</td>\n",
+       "      <td>1933-04-18 19:00:00</td>\n",
+       "    </tr>\n",
+       "  </tbody>\n",
+       "</table>\n",
+       "</div>"
+      ],
+      "text/plain": [
+       "                   City Colors Reported Shape Reported State  \\\n",
+       "0                Ithaca             NaN       TRIANGLE    NY   \n",
+       "1           Willingboro             NaN          OTHER    NJ   \n",
+       "2               Holyoke             NaN           OVAL    CO   \n",
+       "3               Abilene             NaN           DISK    KS   \n",
+       "4  New York Worlds Fair             NaN          LIGHT    NY   \n",
+       "\n",
+       "                 Time  \n",
+       "0 1930-06-01 22:00:00  \n",
+       "1 1930-06-30 20:00:00  \n",
+       "2 1931-02-15 14:00:00  \n",
+       "3 1931-06-01 13:00:00  \n",
+       "4 1933-04-18 19:00:00  "
+      ]
+     },
+     "execution_count": 10,
+     "metadata": {},
+     "output_type": "execute_result"
+    }
+   ],
+   "source": [
+    "# There has been a change to the Time column' structure.\n",
+    "ufo.head()"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 11,
+   "metadata": {},
+   "outputs": [
+    {
+     "data": {
+      "text/plain": [
+       "City                       object\n",
+       "Colors Reported            object\n",
+       "Shape Reported             object\n",
+       "State                      object\n",
+       "Time               datetime64[ns]\n",
+       "dtype: object"
+      ]
+     },
+     "execution_count": 11,
+     "metadata": {},
+     "output_type": "execute_result"
+    }
+   ],
+   "source": [
+    "# We can see that the Time object has changed.  \n",
+    "ufo.dtypes"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "<a id=\"the-dt-attribute\"></a>\n",
+    "### The `.dt` Attribute\n",
+    "\n",
+    "Pandas' datetime columns have a `.dt` attribute that allows you to access attributes specific to dates. For example:\n",
+    "\n",
+    "```python\n",
+    "ufo.Time.dt.day\n",
+    "ufo.Time.dt.month\n",
+    "ufo.Time.dt.year\n",
+    "ufo.Time.dt.weekday_name\n",
+    "```\n",
+    "\n",
+    "And there are many more!"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 17,
+   "metadata": {},
+   "outputs": [
+    {
+     "data": {
+      "text/plain": [
+       "0     Sunday\n",
+       "1     Monday\n",
+       "2     Sunday\n",
+       "3     Monday\n",
+       "4    Tuesday\n",
+       "Name: Time, dtype: object"
+      ]
+     },
+     "execution_count": 17,
+     "metadata": {},
+     "output_type": "execute_result"
+    }
+   ],
+   "source": [
+    "ufo.Time.dt.weekday_name.head()"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 18,
+   "metadata": {},
+   "outputs": [
+    {
+     "data": {
+      "text/plain": [
+       "0    152\n",
+       "1    181\n",
+       "2     46\n",
+       "3    152\n",
+       "4    108\n",
+       "Name: Time, dtype: int64"
+      ]
+     },
+     "execution_count": 18,
+     "metadata": {},
+     "output_type": "execute_result"
+    }
+   ],
+   "source": [
+    "ufo.Time.dt.dayofyear.head()"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "<a id=\"timestamps\"></a>\n",
+    "## Timestamps\n",
+    "---\n",
+    "\n",
+    "Timestamps are useful objects for comparisons. You can create a timestamp object with the `pd.to_datetime()` function and a string specifying the date. These objects are especially helpful when you need to perform logical filtering with dates."
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 19,
+   "metadata": {},
+   "outputs": [
+    {
+     "data": {
+      "text/plain": [
+       "Timestamp('1999-01-01 00:00:00')"
+      ]
+     },
+     "execution_count": 19,
+     "metadata": {},
+     "output_type": "execute_result"
+    }
+   ],
+   "source": [
+    "# Timestamp:\n",
+    "ts = pd.to_datetime('1/1/1999')\n",
+    "ts\n",
+    "# The main difference between a datetime object and a timestamp is\n",
+    "# that timestamps can be used as comparisons."
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 20,
+   "metadata": {},
+   "outputs": [
+    {
+     "data": {
+      "text/html": [
+       "<div>\n",
+       "<table border=\"1\" class=\"dataframe\">\n",
+       "  <thead>\n",
+       "    <tr style=\"text-align: right;\">\n",
+       "      <th></th>\n",
+       "      <th>City</th>\n",
+       "      <th>Colors Reported</th>\n",
+       "      <th>Shape Reported</th>\n",
+       "      <th>State</th>\n",
+       "      <th>Time</th>\n",
+       "    </tr>\n",
+       "  </thead>\n",
+       "  <tbody>\n",
+       "    <tr>\n",
+       "      <th>12832</th>\n",
+       "      <td>Loma Rica</td>\n",
+       "      <td>NaN</td>\n",
+       "      <td>LIGHT</td>\n",
+       "      <td>CA</td>\n",
+       "      <td>1999-01-01 02:30:00</td>\n",
+       "    </tr>\n",
+       "    <tr>\n",
+       "      <th>12833</th>\n",
+       "      <td>Bauxite</td>\n",
+       "      <td>NaN</td>\n",
+       "      <td>NaN</td>\n",
+       "      <td>AR</td>\n",
+       "      <td>1999-01-01 03:00:00</td>\n",
+       "    </tr>\n",
+       "    <tr>\n",
+       "      <th>12834</th>\n",
+       "      <td>Florence</td>\n",
+       "      <td>NaN</td>\n",
+       "      <td>CYLINDER</td>\n",
+       "      <td>SC</td>\n",
+       "      <td>1999-01-01 14:00:00</td>\n",
+       "    </tr>\n",
+       "    <tr>\n",
+       "      <th>12835</th>\n",
+       "      <td>Lake Henshaw</td>\n",
+       "      <td>NaN</td>\n",
+       "      <td>CIGAR</td>\n",
+       "      <td>CA</td>\n",
+       "      <td>1999-01-01 15:00:00</td>\n",
+       "    </tr>\n",
+       "    <tr>\n",
+       "      <th>12836</th>\n",
+       "      <td>Wilmington Island</td>\n",
+       "      <td>NaN</td>\n",
+       "      <td>LIGHT</td>\n",
+       "      <td>GA</td>\n",
+       "      <td>1999-01-01 17:15:00</td>\n",
+       "    </tr>\n",
+       "  </tbody>\n",
+       "</table>\n",
+       "</div>"
+      ],
+      "text/plain": [
+       "                    City Colors Reported Shape Reported State  \\\n",
+       "12832          Loma Rica             NaN          LIGHT    CA   \n",
+       "12833            Bauxite             NaN            NaN    AR   \n",
+       "12834           Florence             NaN       CYLINDER    SC   \n",
+       "12835       Lake Henshaw             NaN          CIGAR    CA   \n",
+       "12836  Wilmington Island             NaN          LIGHT    GA   \n",
+       "\n",
+       "                     Time  \n",
+       "12832 1999-01-01 02:30:00  \n",
+       "12833 1999-01-01 03:00:00  \n",
+       "12834 1999-01-01 14:00:00  \n",
+       "12835 1999-01-01 15:00:00  \n",
+       "12836 1999-01-01 17:15:00  "
+      ]
+     },
+     "execution_count": 20,
+     "metadata": {},
+     "output_type": "execute_result"
+    }
+   ],
+   "source": [
+    "# Use that timestamp for a comparison.\n",
+    "ufo.loc[ufo.Time >= ts, :].head()"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 21,
+   "metadata": {},
+   "outputs": [
+    {
+     "data": {
+      "text/plain": [
+       "Timedelta('25781 days 01:59:00')"
+      ]
+     },
+     "execution_count": 21,
+     "metadata": {},
+     "output_type": "execute_result"
+    }
+   ],
+   "source": [
+    "# We can even get the first and last dates from a time series.\n",
+    "ufo.Time.max() - ufo.Time.min()"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {
+    "collapsed": true
+   },
+   "outputs": [],
+   "source": [
+    "# We'd imagine that months and years are not consistent in length like weeks — \n",
+    "# but, who cares about weeks! They're just seven days."
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "<a id=\"additional-resources\"></a>\n",
+    "## Additional Resources\n",
+    "---\n",
+    "- For more information about Pandas' datetime library, search for `.dt` [here](http://pandas.pydata.org/pandas-docs/stable/api.html).\n",
+    "- Here is [an example](https://github.com/samuel-stack/Portfolio/blob/master/Moving_Violations_VS_Speed_Traps/Granger%20Causality%20test%20.ipynb) of a GCT executed on deconstructed data from Sam Stack's capstone project."
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {},
+   "outputs": [],
+   "source": []
+  }
+ ],
+ "metadata": {
+  "anaconda-cloud": {},
+  "kernelspec": {
+   "display_name": "Python 2",
+   "language": "python",
+   "name": "python2"
+  },
+  "language_info": {
+   "codemirror_mode": {
+    "name": "ipython",
+    "version": 2
+   },
+   "file_extension": ".py",
+   "mimetype": "text/x-python",
+   "name": "python",
+   "nbconvert_exporter": "python",
+   "pygments_lexer": "ipython2",
+   "version": "2.7.14"
+  }
+ },
+ "nbformat": 4,
+ "nbformat_minor": 1
+}

@@ -1,0 +1,32 @@
+# SELECT
+
+SELECT *
+FROM houses
+WHERE age>23
+
+
+SELECT *
+FROM houses
+WHERE age>23 AND price>10000
+
+
+SELECT *
+FROM houses
+WHERE age<30 OR bdrms>3
+
+
+SELECT bdrms, avg(price)
+FROM houses
+GROUP BY bdrms
+
+
+SELECT age,bdrms, avg(price)
+FROM houses
+GROUP BY age,bdrms
+ORDER BY age,bdrms
+
+
+# INSERT
+
+
+INSERT INTO houses(field1,sqft,bdrms,age,price) VALUES (99,498,2,44,98074)
